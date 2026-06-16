@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java集合框架与红黑树 - 全栈转型第一课</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .concept-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        .code-block .comment {
+            color: #a0aec0;
+        }
+
+        .code-block .keyword {
+            color: #63b3ed;
+        }
+
+        .code-block .string {
+            color: #68d391;
+        }
+
+        .code-block .number {
+            color: #f6ad55;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .exercise {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .exercise h4 {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+
+        .quiz {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .quiz h4 {
+            color: #0c5460;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .quiz-option:hover {
+            background: #e2e8f0;
+        }
+
+        .tree-diagram {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: #ffd700;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        .note {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .next-steps {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .next-steps h3 {
+            margin-bottom: 1rem;
+        }
+
+        .next-steps ul {
+            margin-left: 1.5rem;
+        }
+
+        .next-steps li {
+            margin: 0.5rem 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: #666;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Java集合框架与红黑树</h1>
+        <p>从HashMap底层实现理解Java集合框架 - 全栈转型第一课</p>
+    </div>
+
+    <div class="section">
+        <h2>课程目标</h2>
+        <p>通过本课程，你将：</p>
+        <ul>
+            <li>理解Java集合框架的核心接口和实现类</li>
+            <li>深入理解HashMap的底层数据结构</li>
+            <li>掌握红黑树在Java集合中的应用</li>
+            <li>能够选择合适的集合类型解决实际问题</li>
+        </ul>
+
+        <div class="note">
+            <strong>前置知识：</strong>你已经了解HashMap和HashSet，正在探索红黑树实现。本课程将巩固你的基础，并深入底层原理。
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第一部分：Java集合框架概览</h2>
+
+        <h3>1.1 集合框架的层次结构</h3>
+        <p>Java集合框架是一个统一的架构，用于表示和操作集合。核心接口包括：</p>
+
+        <div class="concept-box">
+            <strong>Collection接口</strong>：代表一组对象的集合
+            <ul>
+                <li><strong>List</strong>：有序集合，允许重复元素</li>
+                <li><strong>Set</strong>：不包含重复元素的集合</li>
+                <li><strong>Queue</strong>：用于在处理之前保持元素的集合</li>
+            </ul>
+        </div>
+
+        <div class="concept-box">
+            <strong>Map接口</strong>：键值对映射
+            <ul>
+                <li><strong>HashMap</strong>：基于哈希表的Map实现</li>
+                <li><strong>TreeMap</strong>：基于红黑树的Map实现</li>
+                <li><strong>LinkedHashMap</strong>：维护插入顺序的HashMap</li>
+            </ul>
+        </div>
+
+        <h3>1.2 与JavaScript的对比</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>概念</th>
+                    <th>JavaScript</th>
+                    <th>Java</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>数组</td>
+                    <td>Array（动态类型）</td>
+                    <td>ArrayList（泛型）</td>
+                </tr>
+                <tr>
+                    <td>键值对</td>
+                    <td>Object / Map</td>
+                    <td>HashMap / TreeMap</td>
+                </tr>
+                <tr>
+                    <td>唯一值集合</td>
+                    <td>Set</td>
+                    <td>HashSet / TreeSet</td>
+                </tr>
+                <tr>
+                    <td>队列</td>
+                    <td>Array（模拟）</td>
+                    <td>LinkedList / ArrayDeque</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-block">
+            <span class="comment">// JavaScript中的集合</span><br>
+            <span class="keyword">const</span> arr = [1, 2, 3];<br>
+            <span class="keyword">const</span> map = <span class="keyword">new</span> Map();<br>
+            <span class="keyword">const</span> set = <span class="keyword">new</span> Set();<br><br>
+
+            <span class="comment">// Java中的集合</span><br>
+            List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();<br>
+            Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();<br>
+            Set&lt;Integer&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;();
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第二部分：HashMap的底层实现</h2>
+
+        <h3>2.1 HashMap的基本结构</h3>
+        <p>HashMap是Java中最常用的集合之一，它基于<strong>哈希表</strong>实现，提供了O(1)的平均查找时间。</p>
+
+        <div class="concept-box">
+            <strong>核心组件：</strong>
+            <ul>
+                <li><strong>数组（Node[] table）</strong>：存储桶（bucket）的数组</li>
+                <li><strong>链表</strong>：解决哈希冲突的链表结构</li>
+                <li><strong>红黑树</strong>：当链表过长时转换为红黑树</li>
+                <li><strong>哈希函数</strong>：将键映射到数组索引</li>
+            </ul>
+        </div>
+
+        <h3>2.2 哈希冲突与链表</h3>
+        <p>当两个不同的键映射到同一个数组索引时，就会发生<strong>哈希冲突</strong>。Java使用链表来解决这个问题。</p>
+
+        <div class="tree-diagram">
+            <pre>
+数组索引    链表结构
+    0       [空]
+    1       [Node1] -> [Node2] -> [Node3] -> null
+    2       [空]
+    3       [Node4] -> null
+    4       [空]
+    ...
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <span class="comment">// HashMap的Node节点结构</span><br>
+            <span class="keyword">static class</span> Node&lt;K,V&gt; <span class="keyword">implements</span> Map.Entry&lt;K,V&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">final int</span> hash;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">final</span> K key;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;V value;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Node&lt;K,V&gt; next;<br>
+            }
+        </div>
+
+        <h3>2.3 为什么需要红黑树？</h3>
+        <p>当链表过长时，查找时间会退化为O(n)。为了解决这个问题，Java 8引入了<strong>红黑树</strong>优化。</p>
+
+        <div class="concept-box">
+            <strong>链表转红黑树的条件：</strong>
+            <ul>
+                <li>链表长度超过8（TREEIFY_THRESHOLD）</li>
+                <li>数组长度超过64（MIN_TREEIFY_CAPACITY）</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <strong>重要：</strong>红黑树转换是单向的。当红黑树节点数量减少到6（UNTREEIFY_THRESHOLD）时，会退化为链表。
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第三部分：红黑树基础</h2>
+
+        <h3>3.1 什么是红黑树？</h3>
+        <p>红黑树是一种<strong>自平衡的二叉搜索树</strong>，它通过颜色标记和旋转操作来保持树的平衡。</p>
+
+        <div class="concept-box">
+            <strong>红黑树的五大性质：</strong>
+            <ol>
+                <li>每个节点要么是红色，要么是黑色</li>
+                <li>根节点是黑色</li>
+                <li>每个叶子节点（NIL）是黑色</li>
+                <li>如果一个节点是红色，则它的子节点必须是黑色</li>
+                <li>从任一节点到其每个叶子节点的所有路径都包含相同数量的黑色节点</li>
+            </ol>
+        </div>
+
+        <h3>3.2 红黑树的结构</h3>
+        <div class="tree-diagram">
+            <pre>
+                    [B:13]
+                   /      \
+              [R:8]        [B:17]
+             /    \        /    \
+          [B:1]  [B:11]  [R:15]  [B:25]
+                /    \         /    \
+             [R:6]  [R:14]  [R:22]  [R:27]
+
+            B = 黑色节点, R = 红色节点
+            </pre>
+        </div>
+
+        <h3>3.3 红黑树的优势</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>数据结构</th>
+                    <th>查找时间</th>
+                    <th>插入时间</th>
+                    <th>删除时间</th>
+                    <th>特点</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>链表</td>
+                    <td>O(n)</td>
+                    <td>O(1)</td>
+                    <td>O(1)</td>
+                    <td>简单，但查找慢</td>
+                </tr>
+                <tr>
+                    <td>二叉搜索树</td>
+                    <td>O(log n)</td>
+                    <td>O(log n)</td>
+                    <td>O(log n)</td>
+                    <td>可能不平衡</td>
+                </tr>
+                <tr>
+                    <td>红黑树</td>
+                    <td>O(log n)</td>
+                    <td>O(log n)</td>
+                    <td>O(log n)</td>
+                    <td>自平衡，性能稳定</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>第四部分：HashMap的源码分析</h2>
+
+        <h3>4.1 关键参数</h3>
+        <div class="code-block">
+            <span class="comment">// HashMap的重要参数</span><br>
+            <span class="keyword">static final int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">16</span>;<br>
+            <span class="keyword">static final float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;<br>
+            <span class="keyword">static final int</span> TREEIFY_THRESHOLD = <span class="number">8</span>;<br>
+            <span class="keyword">static final int</span> UNTREEIFY_THRESHOLD = <span class="number">6</span>;<br>
+            <span class="keyword">static final int</span> MIN_TREEIFY_CAPACITY = <span class="number">64</span>;
+        </div>
+
+        <h3>4.2 put方法的执行流程</h3>
+        <div class="concept-box">
+            <strong>put方法步骤：</strong>
+            <ol>
+                <li>计算键的哈希值</li>
+                <li>如果数组为空，进行初始化</li>
+                <li>根据哈希值计算数组索引</li>
+                <li>如果该位置为空，直接插入新节点</li>
+                <li>如果该位置不为空：
+                    <ul>
+                        <li>如果键相同，覆盖值</li>
+                        <li>如果节点是红黑树节点，插入树中</li>
+                        <li>如果是链表，插入链表尾部</li>
+                        <li>如果链表长度超过8，转换为红黑树</li>
+                    </ul>
+                </li>
+                <li>如果超过负载因子，进行扩容</li>
+            </ol>
+        </div>
+
+        <div class="code-block">
+            <span class="comment">// 简化的put方法逻辑</span><br>
+            <span class="keyword">public</span> V put(K key, V value) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 1. 计算哈希值</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span> hash = hash(key);<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 2. 计算数组索引</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span> index = (n - 1) & hash;<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 3. 插入节点</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> (table[index] == <span class="keyword">null</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table[index] = <span class="keyword">new</span> Node&lt;&gt;(hash, key, value, <span class="keyword">null</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;} <span class="keyword">else</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 处理冲突</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handleCollision(table[index], hash, key, value);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 4. 检查是否需要扩容</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> (size > threshold) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resize();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            }
+        </div>
+
+        <h3>4.3 为什么负载因子是0.75？</h3>
+        <div class="note">
+            <strong>负载因子（Load Factor）</strong>是HashMap中用于衡量何时进行扩容的参数。0.75是一个折衷值：
+            <ul>
+                <li>太小：浪费空间，频繁扩容</li>
+                <li>太大：哈希冲突增多，性能下降</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第五部分：实际应用与最佳实践</h2>
+
+        <h3>5.1 如何选择合适的集合？</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>需求</th>
+                    <th>推荐集合</th>
+                    <th>原因</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>键值对存储，快速查找</td>
+                    <td>HashMap</td>
+                    <td>O(1)平均查找时间</td>
+                </tr>
+                <tr>
+                    <td>键值对，需要排序</td>
+                    <td>TreeMap</td>
+                    <td>基于红黑树，有序</td>
+                </tr>
+                <tr>
+                    <td>键值对，保持插入顺序</td>
+                    <td>LinkedHashMap</td>
+                    <td>维护插入顺序</td>
+                </tr>
+                <tr>
+                    <td>唯一值集合</td>
+                    <td>HashSet</td>
+                    <td>基于HashMap实现</td>
+                </tr>
+                <tr>
+                    <td>有序唯一值集合</td>
+                    <td>TreeSet</td>
+                    <td>基于TreeMap实现</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.2 使用示例</h3>
+        <div class="code-block">
+            <span class="comment">// 1. HashMap基本使用</span><br>
+            Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();<br>
+            map.put(<span class="string">"apple"</span>, <span class="number">1</span>);<br>
+            map.put(<span class="string">"banana"</span>, <span class="number">2</span>);<br>
+            <span class="keyword">int</span> count = map.get(<span class="string">"apple"</span>);<br>
+            <br>
+            <span class="comment">// 2. 遍历HashMap</span><br>
+            <span class="keyword">for</span> (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;System.out.println(entry.getKey() + <span class="string">": "</span> + entry.getValue());<br>
+            }<br>
+            <br>
+            <span class="comment">// 3. 使用Java 8的forEach</span><br>
+            map.forEach((key, value) -> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;System.out.println(key + <span class="string">": "</span> + value);<br>
+            });
+        </div>
+
+        <h3>5.3 性能优化建议</h3>
+        <div class="concept-box">
+            <strong>优化技巧：</strong>
+            <ul>
+                <li><strong>预设容量</strong>：如果知道大致元素数量，预设HashMap容量</li>
+                <li><strong>合适的负载因子</strong>：根据使用场景调整负载因子</li>
+                <li><strong>避免频繁扩容</strong>：一次性插入大量数据时，预设足够容量</li>
+                <li><strong>使用不可变键</strong>：确保键的hashCode()和equals()方法正确实现</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <span class="comment">// 预设容量示例</span><br>
+            <span class="comment">// 预计存储1000个元素，负载因子0.75</span><br>
+            <span class="comment">// 初始容量 = 1000 / 0.75 ≈ 1333，取2的幂次 = 2048</span><br>
+            Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;(<span class="number">2048</span>);
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第六部分：练习与思考</h2>
+
+        <div class="exercise">
+            <h4>练习1：理解哈希冲突</h4>
+            <p>假设有以下字符串键："Aa"和"BB"，它们的hashCode()相同（都是2112）。</p>
+            <ol>
+                <li>解释为什么它们会产生哈希冲突</li>
+                <li>描述HashMap如何处理这种冲突</li>
+                <li>画出冲突后的数据结构图</li>
+            </ol>
+        </div>
+
+        <div class="exercise">
+            <h4>练习2：红黑树性质验证</h4>
+            <p>给定以下红黑树，验证它是否满足红黑树的五大性质：</p>
+            <div class="tree-diagram">
+                <pre>
+                    [B:10]
+                   /      \
+              [R:5]        [B:15]
+             /    \        /    \
+          [B:3]  [B:7]  [R:12]  [B:20]
+                </pre>
+            </div>
+            <p>如果违反了某个性质，说明如何修复。</p>
+        </div>
+
+        <div class="quiz">
+            <h4>知识检查</h4>
+            <p><strong>问题1：</strong>HashMap在什么条件下会将链表转换为红黑树？</p>
+            <div class="quiz-option">A. 链表长度超过6</div>
+            <div class="quiz-option">B. 链表长度超过8且数组长度超过64</div>
+            <div class="quiz-option">C. 数组长度超过64</div>
+            <div class="quiz-option">D. 元素数量超过容量的75%</div>
+
+            <p><strong>问题2：</strong>红黑树的查找时间复杂度是多少？</p>
+            <div class="quiz-option">A. O(1)</div>
+            <div class="quiz-option">B. O(log n)</div>
+            <div class="quiz-option">C. O(n)</div>
+            <div class="quiz-option">D. O(n log n)</div>
+
+            <p><strong>问题3：</strong>HashMap的默认负载因子是多少？</p>
+            <div class="quiz-option">A. 0.5</div>
+            <div class="quiz-option">B. 0.75</div>
+            <div class="quiz-option">C. 1.0</div>
+            <div class="quiz-option">D. 0.25</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>下一步学习</h2>
+
+        <div class="next-steps">
+            <h3>恭喜完成第一课！</h3>
+            <p>你已经深入理解了Java集合框架和红黑树的底层原理。接下来的学习建议：</p>
+            <ul>
+                <li><strong>动手实践</strong>：尝试自己实现一个简单的HashMap</li>
+                <li><strong>源码阅读</strong>：阅读Java 8的HashMap源码</li>
+                <li><strong>下一课程</strong>：Spring Boot项目搭建与RESTful API开发</li>
+                <li><strong>扩展学习</strong>：了解ConcurrentHashMap的线程安全实现</li>
+            </ul>
+
+            <p><strong>推荐资源：</strong></p>
+            <ul>
+                <li><a href="https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html" style="color: #ffd700;">Java 8 HashMap官方文档</a></li>
+                <li><a href="https://www.baeldung.com/java-hashmap" style="color: #ffd700;">Baeldung: HashMap详解</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Red%E2%80%93black_tree" style="color: #ffd700;">维基百科：红黑树</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>全栈工程师转型计划 - 第一课 | 基于你的学习进度定制</p>
+        <p>有任何疑问？随时向你的AI导师提问！</p>
+    </div>
+
+    <script>
+        // 交互式测验功能
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const question = this.parentElement;
+                const options = question.querySelectorAll('.quiz-option');
+
+                // 移除所有选中状态
+                options.forEach(opt => {
+                    opt.style.background = 'white';
+                    opt.style.color = '#333';
+                });
+
+                // 设置选中状态
+                this.style.background = '#667eea';
+                this.style.color = 'white';
+
+                // 检查答案
+                const questionText = question.querySelector('p').textContent;
+                let correctAnswer = '';
+
+                if (questionText.includes('HashMap在什么条件下')) {
+                    correctAnswer = 'B';
+                } else if (questionText.includes('红黑树的查找时间')) {
+                    correctAnswer = 'B';
+                } else if (questionText.includes('默认负载因子')) {
+                    correctAnswer = 'B';
+                }
+
+                const selectedAnswer = this.textContent.charAt(0);
+
+                if (selectedAnswer === correctAnswer) {
+                    this.style.background = '#4caf50';
+                    setTimeout(() => {
+                        alert('✓ 正确！' + getExplanation(questionText));
+                    }, 300);
+                } else {
+                    this.style.background = '#f44336';
+                    setTimeout(() => {
+                        alert('✗ 错误。正确答案是 ' + correctAnswer + '。' + getExplanation(questionText));
+                    }, 300);
+                }
+            });
+        });
+
+        function getExplanation(questionText) {
+            if (questionText.includes('HashMap在什么条件下')) {
+                return '当链表长度超过8（TREEIFY_THRESHOLD）且数组长度超过64（MIN_TREEIFY_CAPACITY）时，HashMap会将链表转换为红黑树。';
+            } else if (questionText.includes('红黑树的查找时间')) {
+                return '红黑树是一种平衡二叉搜索树，查找时间复杂度为O(log n)。';
+            } else if (questionText.includes('默认负载因子')) {
+                return 'HashMap的默认负载因子是0.75，这是一个在时间和空间成本之间的良好折衷。';
+            }
+            return '';
+        }
+    </script>
+</body>
+</html>

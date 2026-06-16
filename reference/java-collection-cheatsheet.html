@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java集合框架快速参考 - 全栈转型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .quick-ref {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .code-snippet {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #e2e8f0;
+            padding: 0.8rem;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .tree-diagram {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: #ffd700;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        .note {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .key-point {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: #666;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .print-friendly {
+            display: none;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .header {
+                background: #667eea !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .section {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+
+            .print-friendly {
+                display: block;
+                margin-top: 1rem;
+                padding: 0.5rem;
+                background: #f0f0f0;
+                border-radius: 4px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Java集合框架快速参考</h1>
+        <p>HashMap、红黑树与集合选择指南</p>
+    </div>
+
+    <div class="section">
+        <h2>📋 核心接口速查</h2>
+
+        <div class="two-column">
+            <div>
+                <h3>Collection接口</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>接口</th>
+                            <th>特点</th>
+                            <th>常用实现</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>List</strong></td>
+                            <td>有序，可重复</td>
+                            <td>ArrayList, LinkedList</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Set</strong></td>
+                            <td>无序，不可重复</td>
+                            <td>HashSet, TreeSet</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Queue</strong></td>
+                            <td>先进先出</td>
+                            <td>LinkedList, ArrayDeque</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h3>Map接口</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>实现</th>
+                            <th>特点</th>
+                            <th>时间复杂度</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>HashMap</strong></td>
+                            <td>基于哈希表</td>
+                            <td>O(1) 平均</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TreeMap</strong></td>
+                            <td>基于红黑树，有序</td>
+                            <td>O(log n)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LinkedHashMap</strong></td>
+                            <td>维护插入顺序</td>
+                            <td>O(1) 平均</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔧 HashMap核心参数</h2>
+
+        <div class="code-snippet">
+            <span style="color: #a0aec0;">// 关键参数</span><br>
+            DEFAULT_INITIAL_CAPACITY = <span style="color: #f6ad55;">16</span><br>
+            DEFAULT_LOAD_FACTOR = <span style="color: #f6ad55;">0.75f</span><br>
+            TREEIFY_THRESHOLD = <span style="color: #f6ad55;">8</span><br>
+            UNTREEIFY_THRESHOLD = <span style="color: #f6ad55;">6</span><br>
+            MIN_TREEIFY_CAPACITY = <span style="color: #f6ad55;">64</span>
+        </div>
+
+        <div class="key-point">
+            <strong>关键点：</strong>
+            <ul>
+                <li><span class="highlight">链表转红黑树</span>：链表长度 > 8 且数组长度 > 64</li>
+                <li><span class="highlight">红黑树退化为链表</span>：节点数 < 6</li>
+                <li><span class="highlight">扩容</span>：元素数量 > 容量 × 负载因子</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🌳 红黑树性质</h2>
+
+        <div class="tree-diagram">
+            <pre>
+                [B:13]
+               /      \
+          [R:8]        [B:17]
+         /    \        /    \
+      [B:1]  [B:11]  [R:15]  [B:25]
+
+            B = 黑色, R = 红色
+            </pre>
+        </div>
+
+        <div class="quick-ref">
+            <strong>五大性质：</strong>
+            <ol>
+                <li>节点颜色：红或黑</li>
+                <li>根节点：黑色</li>
+                <li>叶子节点(NIL)：黑色</li>
+                <li>红色节点的子节点：必须黑色</li>
+                <li>黑色节点数：从任一节点到叶子路径上的黑色节点数相同</li>
+            </ol>
+        </div>
+
+        <div class="note">
+            <strong>优势：</strong>红黑树通过这五大性质保证树的平衡，查找、插入、删除时间复杂度均为O(log n)。
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚡ 性能对比</h2>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>数据结构</th>
+                    <th>查找</th>
+                    <th>插入</th>
+                    <th>删除</th>
+                    <th>适用场景</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>链表</strong></td>
+                    <td>O(n)</td>
+                    <td>O(1)</td>
+                    <td>O(1)</td>
+                    <td>少量数据，频繁插入</td>
+                </tr>
+                <tr>
+                    <td><strong>红黑树</strong></td>
+                    <td>O(log n)</td>
+                    <td>O(log n)</td>
+                    <td>O(log n)</td>
+                    <td>大量数据，需要有序</td>
+                </tr>
+                <tr>
+                    <td><strong>哈希表</strong></td>
+                    <td>O(1) 平均</td>
+                    <td>O(1) 平均</td>
+                    <td>O(1) 平均</td>
+                    <td>快速查找，无序</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>🎯 集合选择指南</h2>
+
+        <div class="two-column">
+            <div>
+                <h3>选择Map</h3>
+                <div class="quick-ref">
+                    <ul>
+                        <li><strong>快速查找，无序</strong> → HashMap</li>
+                        <li><strong>需要排序</strong> → TreeMap</li>
+                        <li><strong>保持插入顺序</strong> → LinkedHashMap</li>
+                        <li><strong>线程安全</strong> → ConcurrentHashMap</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <h3>选择Collection</h3>
+                <div class="quick-ref">
+                    <ul>
+                        <li><strong>有序列表</strong> → ArrayList</li>
+                        <li><strong>频繁插入/删除</strong> → LinkedList</li>
+                        <li><strong>唯一值集合</strong> → HashSet</li>
+                        <li><strong>有序唯一值</strong> → TreeSet</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 常用代码片段</h2>
+
+        <h3>HashMap基本操作</h3>
+        <div class="code-snippet">
+            <span style="color: #a0aec0;">// 创建</span><br>
+            Map&lt;String, Integer&gt; map = <span style="color: #63b3ed;">new</span> HashMap&lt;&gt;();<br><br>
+
+            <span style="color: #a0aec0;">// 添加</span><br>
+            map.put(<span style="color: #68d391;">"key"</span>, <span style="color: #f6ad55;">1</span>);<br><br>
+
+            <span style="color: #a0aec0;">// 获取</span><br>
+            <span style="color: #63b3ed;">int</span> value = map.get(<span style="color: #68d391;">"key"</span>);<br><br>
+
+            <span style="color: #a0aec0;">// 检查</span><br>
+            <span style="color: #63b3ed;">boolean</span> exists = map.containsKey(<span style="color: #68d391;">"key"</span>);<br><br>
+
+            <span style="color: #a0aec0;">// 遍历</span><br>
+            map.forEach((k, v) -> System.out.println(k + <span style="color: #68d391;">": "</span> + v));
+        </div>
+
+        <h3>预设容量（性能优化）</h3>
+        <div class="code-snippet">
+            <span style="color: #a0aec0;">// 预计存储1000个元素</span><br>
+            <span style="color: #a0aec0;">// 容量 = 1000 / 0.75 ≈ 1333</span><br>
+            <span style="color: #a0aec0;">// 取2的幂次 = 2048</span><br>
+            Map&lt;String, Integer&gt; map = <span style="color: #63b3ed;">new</span> HashMap&lt;&gt;(<span style="color: #f6ad55;">2048</span>);
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 常见陷阱</h2>
+
+        <div class="warning">
+            <strong>1. 键对象必须正确实现hashCode()和equals()</strong><br>
+            否则会导致查找失败或重复元素。
+        </div>
+
+        <div class="warning">
+            <strong>2. HashMap不是线程安全的</strong><br>
+            多线程环境使用ConcurrentHashMap或Collections.synchronizedMap()。
+        </div>
+
+        <div class="warning">
+            <strong>3. 避免在遍历时修改Map</strong><br>
+            会抛出ConcurrentModificationException，使用Iterator的remove()方法。
+        </div>
+
+        <div class="warning">
+            <strong>4. TreeMap要求键实现Comparable</strong><br>
+            否则需要在构造函数中提供Comparator。
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔗 JavaScript对比</h2>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>操作</th>
+                    <th>JavaScript</th>
+                    <th>Java</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>创建Map</td>
+                    <td>new Map()</td>
+                    <td>new HashMap&lt;&gt;()</td>
+                </tr>
+                <tr>
+                    <td>添加元素</td>
+                    <td>map.set(key, value)</td>
+                    <td>map.put(key, value)</td>
+                </tr>
+                <tr>
+                    <td>获取元素</td>
+                    <td>map.get(key)</td>
+                    <td>map.get(key)</td>
+                </tr>
+                <tr>
+                    <td>检查键</td>
+                    <td>map.has(key)</td>
+                    <td>map.containsKey(key)</td>
+                </tr>
+                <tr>
+                    <td>删除元素</td>
+                    <td>map.delete(key)</td>
+                    <td>map.remove(key)</td>
+                </tr>
+                <tr>
+                    <td>遍历</td>
+                    <td>for...of</td>
+                    <td>forEach / entrySet()</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>📚 进阶主题</h2>
+
+        <div class="quick-ref">
+            <ul>
+                <li><strong>ConcurrentHashMap</strong>：线程安全的HashMap</li>
+                <li><strong>WeakHashMap</strong>：键为弱引用的Map</li>
+                <li><strong>IdentityHashMap</strong>：使用==比较键</li>
+                <li><strong>EnumMap</strong>：键为枚举类型的Map</li>
+                <li><strong>SortedMap接口</strong>：提供排序功能的Map</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Java集合框架快速参考 | 全栈工程师转型计划</p>
+        <p class="print-friendly">💡 提示：按Ctrl+P打印此页面作为速查手册</p>
+    </div>
+</body>
+</html>

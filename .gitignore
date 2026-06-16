@@ -1,0 +1,28 @@
+# macOS 系统文件
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+
+# IDE 文件
+.idea/
+*.iml
+.vscode/
+
+# Java 编译文件
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven/Gradle 构建目录
+target/
+build/
+.gradle/
+
+# 日志文件
+*.log
+
+# 环境变量
+.env
+.env.local
