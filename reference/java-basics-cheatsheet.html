@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 基础语法速查手册</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.5; color: #333; max-width: 1200px;
+            margin: 0 auto; padding: 1.5rem; background: #f8f9fa;
+        }
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white; padding: 1.5rem; border-radius: 8px;
+            margin-bottom: 1.5rem; text-align: center;
+        }
+        .section {
+            background: white; padding: 1.5rem; margin-bottom: 1.5rem;
+            border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section h2 { color: #f5576c; border-bottom: 2px solid #f5576c; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        .code-snippet {
+            background: #2d3748; color: #e2e8f0; padding: 1rem;
+            border-radius: 6px; margin: 1rem 0; font-family: monospace; font-size: 0.9rem;
+        }
+        .comparison-table {
+            width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #e2e8f0; padding: 0.8rem; text-align: left;
+        }
+        .comparison-table th { background: #f5576c; color: white; }
+        .quick-ref { background: #fff5f5; border-left: 4px solid #f5576c; padding: 1rem; margin: 1rem 0; }
+        .note { background: #e8f5e8; border-left: 4px solid #4caf50; padding: 0.8rem; margin: 0.8rem 0; }
+        .warning { background: #fff3e0; border-left: 4px solid #ff9800; padding: 0.8rem; margin: 0.8rem 0; }
+        .footer { text-align: center; margin-top: 2rem; padding: 1rem; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Java 基础语法速查手册</h1>
+        <p>从 JavaScript 到 Java 的快速参考</p>
+    </div>
+
+    <div class="section">
+        <h2>📦 数据类型</h2>
+        <table class="comparison-table">
+            <thead><tr><th>类型</th><th>大小</th><th>示例</th><th>JS 等价</th></tr></thead>
+            <tbody>
+                <tr><td>int</td><td>4字节</td><td>int x = 10;</td><td>Number</td></tr>
+                <tr><td>long</td><td>8字节</td><td>long x = 100L;</td><td>BigInt</td></tr>
+                <tr><td>double</td><td>8字节</td><td>double x = 3.14;</td><td>Number</td></tr>
+                <tr><td>boolean</td><td>1位</td><td>boolean x = true;</td><td>Boolean</td></tr>
+                <tr><td>char</td><td>2字节</td><td>char x = 'A';</td><td>String</td></tr>
+                <tr><td>String</td><td>-</td><td>String x = "hi";</td><td>String</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>🔄 控制流</h2>
+        <div class="code-snippet">
+<span style="color:#a0aec0">// 条件</span>
+if (condition) { ... }
+else if (condition) { ... }
+else { ... }
+
+<span style="color:#a0aec0">// 三元运算符</span>
+String result = x > 10 ? "大" : "小";
+
+<span style="color:#a0aec0">// for 循环</span>
+for (int i = 0; i < 10; i++) { ... }
+
+<span style="color:#a0aec0">// for-each</span>
+for (int item : array) { ... }
+
+<span style="color:#a0aec0">// while</span>
+while (condition) { ... }
+
+<span style="color:#a0aec0">// switch</span>
+switch (value) {
+    case 1: ...; break;
+    case 2: ...; break;
+    default: ...;
+}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🏗️ 类和对象</h2>
+        <div class="code-snippet">
+<span style="color:#a0aec0">// 定义类</span>
+public class Person {
+    private String name;    <span style="color:#a0aec0">// 私有属性</span>
+    private int age;
+
+    public Person(String name, int age) {  <span style="color:#a0aec0">// 构造方法</span>
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() { return name; }  <span style="color:#a0aec0">// Getter</span>
+    public void setName(String name) { this.name = name; }  <span style="color:#a0aec0">// Setter</span>
+
+    public void sayHello() {  <span style="color:#a0aec0">// 方法</span>
+        System.out.println("Hi, I'm " + name);
+    }
+}
+
+<span style="color:#a0aec0">// 创建对象</span>
+Person p = new Person("张三", 25);
+p.sayHello();
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔗 继承与接口</h2>
+        <div class="code-snippet">
+<span style="color:#a0aec0">// 继承</span>
+public class Animal {
+    protected String name;
+    public void eat() { System.out.println(name + "吃东西"); }
+}
+
+public class Dog extends Animal {
+    public void bark() { System.out.println("汪汪叫"); }
+}
+
+<span style="color:#a0aec0">// 接口</span>
+public interface Drawable {
+    void draw();
+}
+
+public class Circle implements Drawable {
+    @Override
+    public void draw() { System.out.println("画圆"); }
+}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 异常处理</h2>
+        <div class="code-snippet">
+try {
+    // 可能出错的代码
+    int result = 10 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("算术错误: " + e.getMessage());
+} catch (Exception e) {
+    System.out.println("其他错误: " + e.getMessage());
+} finally {
+    System.out.println("总是执行");
+}
+
+<span style="color:#a0aec0">// 抛出异常</span>
+public void setAge(int age) {
+    if (age < 0) throw new IllegalArgumentException("年龄不能为负");
+}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 数组与字符串</h2>
+        <div class="code-snippet">
+<span style="color:#a0aec0">// 数组</span>
+int[] arr = new int[5];
+int[] nums = {1, 2, 3, 4, 5};
+arr.length;  <span style="color:#a0aec0">// 长度</span>
+
+<span style="color:#a0aec0">// 字符串</span>
+String s = "Hello";
+s.length();           <span style="color:#a0aec0">// 5</span>
+s.charAt(0);          <span style="color:#a0aec0">// 'H'</span>
+s.substring(2);       <span style="color:#a0aec0">// "llo"</span>
+s.contains("ell");    <span style="color:#a0aec0">// true</span>
+s.toUpperCase();      <span style="color:#a0aec0">// "HELLO"</span>
+s.replace("l", "L");  <span style="color:#a0aec0">// "HeLLo"</span>
+
+<span style="color:#a0aec0">// StringBuilder</span>
+StringBuilder sb = new StringBuilder();
+sb.append("Hello").append(" World");
+String result = sb.toString();
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔑 访问修饰符</h2>
+        <table class="comparison-table">
+            <thead><tr><th>修饰符</th><th>类内</th><th>同包</th><th>子类</th><th>其他</th></tr></thead>
+            <tbody>
+                <tr><td>private</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+                <tr><td>default</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td></tr>
+                <tr><td>protected</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+                <tr><td>public</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>⚡ 关键字速查</h2>
+        <div class="quick-ref">
+            <strong>数据类型：</strong>int, long, double, float, boolean, char, byte, short<br>
+            <strong>控制流：</strong>if, else, switch, case, for, while, do, break, continue<br>
+            <strong>面向对象：</strong>class, interface, extends, implements, this, super, new<br>
+            <strong>修饰符：</strong>public, private, protected, static, final, abstract<br>
+            <strong>异常：</strong>try, catch, finally, throw, throws<br>
+            <strong>其他：</strong>import, package, void, return, null, true, false
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Java 基础语法速查手册 | 全栈工程师转型计划</p>
+    </div>
+</body>
+</html>

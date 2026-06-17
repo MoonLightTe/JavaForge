@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 语言基础快速入门 - 全栈转型第二课</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6; color: #333;
+            max-width: 1200px; margin: 0 auto; padding: 2rem;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white; padding: 3rem; border-radius: 10px;
+            margin-bottom: 2rem; text-align: center;
+        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section {
+            background: white; padding: 2rem; margin-bottom: 2rem;
+            border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section h2 { color: #f5576c; border-bottom: 2px solid #f5576c; padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+        .section h3 { color: #f093fb; margin: 1.5rem 0 1rem 0; }
+        .concept-box {
+            background: #fff5f5; border-left: 4px solid #f5576c;
+            padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0;
+        }
+        .code-block {
+            background: #2d3748; color: #e2e8f0; padding: 1.5rem;
+            border-radius: 8px; margin: 1.5rem 0; overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .comparison-table {
+            width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #e2e8f0; padding: 1rem; text-align: left;
+        }
+        .comparison-table th { background: #f5576c; color: white; }
+        .comparison-table tr:nth-child(even) { background: #f7fafc; }
+        .exercise {
+            background: #fff3cd; border: 1px solid #ffc107;
+            padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;
+        }
+        .exercise h4 { color: #856404; margin-bottom: 1rem; }
+        .quiz {
+            background: #d1ecf1; border: 1px solid #bee5eb;
+            padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;
+        }
+        .quiz h4 { color: #0c5460; margin-bottom: 1rem; }
+        .quiz-option {
+            margin: 0.5rem 0; padding: 0.8rem; background: white;
+            border-radius: 4px; cursor: pointer; border: 1px solid #e2e8f0;
+        }
+        .quiz-option:hover { background: #e2e8f0; }
+        .note {
+            background: #e8f5e8; border-left: 4px solid #4caf50;
+            padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0;
+        }
+        .warning {
+            background: #fff3e0; border-left: 4px solid #ff9800;
+            padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0;
+        }
+        .next-steps {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white; padding: 2rem; border-radius: 8px; margin-top: 2rem;
+        }
+        .footer {
+            text-align: center; margin-top: 3rem; padding: 2rem;
+            color: #666; border-top: 1px solid #e2e8f0;
+        }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        @media (max-width: 768px) { .two-column { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Java 语言基础快速入门</h1>
+        <p>从 JavaScript 到 Java — 对比学习，快速上手</p>
+    </div>
+
+    <div class="section">
+        <h2>课程目标</h2>
+        <p>通过本课程，你将：</p>
+        <ul>
+            <li>掌握 Java 基础语法（对比 JavaScript）</li>
+            <li>理解面向对象编程的核心概念</li>
+            <li>学会 Java 异常处理机制</li>
+            <li>能够编写简单的 Java 命令行程序</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>第一部分：Java vs JavaScript 核心差异</h2>
+
+        <h3>1.1 类型系统</h3>
+        <div class="two-column">
+            <div class="concept-box">
+                <strong>JavaScript（动态类型）</strong>
+                <div class="code-block">
+let name = "张三";      // string
+let age = 25;           // number
+let isStudent = true;   // boolean
+
+// 类型可以随时改变
+name = 123;  // ✅ 合法
+                </div>
+            </div>
+            <div class="concept-box">
+                <strong>Java（静态类型）</strong>
+                <div class="code-block">
+String name = "张三";    // 必须声明类型
+int age = 25;
+boolean isStudent = true;
+
+// 类型不可改变
+name = 123;  // ❌ 编译错误
+                </div>
+            </div>
+        </div>
+
+        <h3>1.2 基本数据类型</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Java 类型</th>
+                    <th>大小</th>
+                    <th>范围</th>
+                    <th>JavaScript 等价</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>byte</strong></td><td>1 字节</td><td>-128 ~ 127</td><td>Number</td></tr>
+                <tr><td><strong>short</strong></td><td>2 字节</td><td>-32768 ~ 32767</td><td>Number</td></tr>
+                <tr><td><strong>int</strong></td><td>4 字节</td><td>-2^31 ~ 2^31-1</td><td>Number</td></tr>
+                <tr><td><strong>long</strong></td><td>8 字节</td><td>-2^63 ~ 2^63-1</td><td>BigInt</td></tr>
+                <tr><td><strong>float</strong></td><td>4 字节</td><td>单精度浮点</td><td>Number</td></tr>
+                <tr><td><strong>double</strong></td><td>8 字节</td><td>双精度浮点</td><td>Number</td></tr>
+                <tr><td><strong>char</strong></td><td>2 字节</td><td>Unicode 字符</td><td>String</td></tr>
+                <tr><td><strong>boolean</strong></td><td>1 位</td><td>true/false</td><td>Boolean</td></tr>
+            </tbody>
+        </table>
+
+        <div class="code-block">
+<span style="color: #a0aec0;">// Java 变量声明</span>
+<span style="color: #63b3ed;">int</span> age = <span style="color: #f6ad55;">25</span>;
+<span style="color: #63b3ed;">double</span> price = <span style="color: #f6ad55;">99.99</span>;
+<span style="color: #63b3ed;">char</span> grade = <span style="color: #68d391;">'A'</span>;
+<span style="color: #63b3ed;">boolean</span> isActive = <span style="color: #63b3ed;">true</span>;
+<span style="color: #63b3ed;">String</span> name = <span style="color: #68d391;">"张三"</span>;  <span style="color: #a0aec0;">// String 是类，不是基本类型</span>
+        </div>
+
+        <h3>1.3 类型转换</h3>
+        <div class="code-block">
+<span style="color: #a0aec0;">// 自动类型转换（小 → 大）</span>
+<span style="color: #63b3ed;">int</span> myInt = <span style="color: #f6ad55;">100</span>;
+<span style="color: #63b3ed;">double</span> myDouble = myInt;  <span style="color: #a0aec0;">// ✅ 自动转换</span>
+
+<span style="color: #a0aec0;">// 强制类型转换（大 → 小）</span>
+<span style="color: #63b3ed;">double</span> pi = <span style="color: #f6ad55;">3.14</span>;
+<span style="color: #63b3ed;">int</span> rounded = (<span style="color: #63b3ed;">int</span>) pi;  <span style="color: #a0aec0;">// ⚠️ 丢失小数部分，结果为 3</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第二部分：控制流语句</h2>
+
+        <h3>2.1 条件语句</h3>
+        <div class="two-column">
+            <div>
+                <strong>JavaScript</strong>
+                <div class="code-block">
+if (score >= 90) {
+    console.log("优秀");
+} else if (score >= 60) {
+    console.log("及格");
+} else {
+    console.log("不及格");
+}
+
+// 三元运算符
+let result = score >= 60 ? "Pass" : "Fail";
+                </div>
+            </div>
+            <div>
+                <strong>Java</strong>
+                <div class="code-block">
+if (score >= 90) {
+    System.out.println("优秀");
+} else if (score >= 60) {
+    System.out.println("及格");
+} else {
+    System.out.println("不及格");
+}
+
+// 三元运算符（相同）
+String result = score >= 60 ? "Pass" : "Fail";
+                </div>
+            </div>
+        </div>
+
+        <h3>2.2 循环语句</h3>
+        <div class="code-block">
+<span style="color: #a0aec0;">// for 循环</span>
+<span style="color: #63b3ed;">for</span> (<span style="color: #63b3ed;">int</span> i = <span style="color: #f6ad55;">0</span>; i < <span style="color: #f6ad55;">10</span>; i++) {
+    System.out.println(i);
+}
+
+<span style="color: #a0aec0;">// while 循环</span>
+<span style="color: #63b3ed;">int</span> count = <span style="color: #f6ad55;">0</span>;
+<span style="color: #63b3ed;">while</span> (count < <span style="color: #f6ad55;">5</span>) {
+    System.out.println(count);
+    count++;
+}
+
+<span style="color: #a0aec0;">// 增强 for 循环（for-each）</span>
+<span style="color: #63b3ed;">int</span>[] numbers = {<span style="color: #f6ad55;">1</span>, <span style="color: #f6ad55;">2</span>, <span style="color: #f6ad55;">3</span>, <span style="color: #f6ad55;">4</span>, <span style="color: #f6ad55;">5</span>};
+<span style="color: #63b3ed;">for</span> (<span style="color: #63b3ed;">int</span> num : numbers) {
+    System.out.println(num);
+}
+        </div>
+
+        <h3>2.3 switch 语句</h3>
+        <div class="code-block">
+<span style="color: #63b3ed;">switch</span> (day) {
+    <span style="color: #63b3ed;">case</span> <span style="color: #68d391;">"Monday"</span>:
+        System.out.println("周一");
+        <span style="color: #63b3ed;">break</span>;
+    <span style="color: #63b3ed;">case</span> <span style="color: #68d391;">"Tuesday"</span>:
+        System.out.println("周二");
+        <span style="color: #63b3ed;">break</span>;
+    <span style="color: #63b3ed;">default</span>:
+        System.out.println("其他天");
+}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第三部分：面向对象编程</h2>
+
+        <h3>3.1 类和对象</h3>
+        <div class="concept-box">
+            <strong>核心概念：</strong>
+            <ul>
+                <li><strong>类（Class）</strong>：对象的模板，定义属性和方法</li>
+                <li><strong>对象（Object）</strong>：类的实例</li>
+                <li><strong>属性（Field）</strong>：对象的状态</li>
+                <li><strong>方法（Method）</strong>：对象的行为</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+<span style="color: #a0aec0;">// 定义类</span>
+<span style="color: #63b3ed;">public class</span> Person {
+    <span style="color: #a0aec0;">// 属性</span>
+    <span style="color: #63b3ed;">private</span> String name;
+    <span style="color: #63b3ed;">private int</span> age;
+
+    <span style="color: #a0aec0;">// 构造方法</span>
+    <span style="color: #63b3ed;">public</span> Person(String name, <span style="color: #63b3ed;">int</span> age) {
+        <span style="color: #63b3ed;">this</span>.name = name;
+        <span style="color: #63b3ed;">this</span>.age = age;
+    }
+
+    <span style="color: #a0aec0;">// Getter 方法</span>
+    <span style="color: #63b3ed;">public</span> String getName() {
+        <span style="color: #63b3ed;">return</span> name;
+    }
+
+    <span style="color: #a0aec0;">// 方法</span>
+    <span style="color: #63b3ed;">public void</span> sayHello() {
+        System.out.println(<span style="color: #68d391;">"你好，我是 "</span> + name);
+    }
+}
+
+<span style="color: #a0aec0;">// 创建对象</span>
+Person person = <span style="color: #63b3ed;">new</span> Person(<span style="color: #68d391;">"张三"</span>, <span style="color: #f6ad55;">25</span>);
+person.sayHello();  <span style="color: #a0aec0;">// 输出：你好，我是 张三</span>
+        </div>
+
+        <h3>3.2 封装</h3>
+        <div class="note">
+            <strong>封装</strong>：将数据（属性）和操作数据的方法捆绑在一起，并隐藏内部实现细节。
+        </div>
+        <div class="code-block">
+<span style="color: #63b3ed;">public class</span> BankAccount {
+    <span style="color: #63b3ed;">private double</span> balance;  <span style="color: #a0aec0;">// 私有属性</span>
+
+    <span style="color: #a0aec0;">// 通过公共方法访问</span>
+    <span style="color: #63b3ed;">public double</span> getBalance() {
+        <span style="color: #63b3ed;">return</span> balance;
+    }
+
+    <span style="color: #a0aec0;">// 添加验证逻辑</span>
+    <span style="color: #63b3ed;">public void</span> deposit(<span style="color: #63b3ed;">double</span> amount) {
+        <span style="color: #63b3ed;">if</span> (amount > <span style="color: #f6ad55;">0</span>) {
+            balance += amount;
+        }
+    }
+}
+        </div>
+
+        <h3>3.3 继承</h3>
+        <div class="code-block">
+<span style="color: #a0aec0;">// 父类</span>
+<span style="color: #63b3ed;">public class</span> Animal {
+    <span style="color: #63b3ed;">protected</span> String name;
+
+    <span style="color: #63b3ed;">public void</span> eat() {
+        System.out.println(name + <span style="color: #68d391;">"正在吃东西"</span>);
+    }
+}
+
+<span style="color: #a0aec0;">// 子类继承父类</span>
+<span style="color: #63b3ed;">public class</span> Dog <span style="color: #63b3ed;">extends</span> Animal {
+    <span style="color: #63b3ed;">public</span> Dog(String name) {
+        <span style="color: #63b3ed;">this</span>.name = name;
+    }
+
+    <span style="color: #a0aec0;">// 子类特有方法</span>
+    <span style="color: #63b3ed;">public void</span> bark() {
+        System.out.println(name + <span style="color: #68d391;">"汪汪叫"</span>);
+    }
+}
+
+Dog dog = <span style="color: #63b3ed;">new</span> Dog(<span style="color: #68d391;">"旺财"</span>);
+dog.eat();   <span style="color: #a0aec0;">// 继承自 Animal</span>
+dog.bark();  <span style="color: #a0aec0;">// Dog 特有</span>
+        </div>
+
+        <h3>3.4 多态</h3>
+        <div class="code-block">
+<span style="color: #a0aec0;">// 方法重写</span>
+<span style="color: #63b3ed;">public class</span> Cat <span style="color: #63b3ed;">extends</span> Animal {
+    <span style="color: #a0aec0;">@Override</span>
+    <span style="color: #63b3ed;">public void</span> eat() {
+        System.out.println(name + <span style="color: #68d391;">"优雅地吃猫粮"</span>);
+    }
+}
+
+<span style="color: #a0aec0;">// 多态：同一方法，不同行为</span>
+Animal animal1 = <span style="color: #63b3ed;">new</span> Dog(<span style="color: #68d391;">"旺财"</span>);
+Animal animal2 = <span style="color: #63b3ed;">new</span> Cat(<span style="color: #68d391;">"咪咪"</span>);
+
+animal1.eat();  <span style="color: #a0aec0;">// 旺财正在吃东西</span>
+animal2.eat();  <span style="color: #a0aec0;">// 咪咪优雅地吃猫粮</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第四部分：接口和抽象类</h2>
+
+        <h3>4.1 接口（Interface）</h3>
+        <div class="concept-box">
+            <strong>接口</strong>：定义一组方法签名，实现类必须实现这些方法。
+        </div>
+        <div class="code-block">
+<span style="color: #a0aec0;">// 定义接口</span>
+<span style="color: #63b3ed;">public interface</span> Drawable {
+    <span style="color: #63b3ed;">void</span> draw();  <span style="color: #a0aec0;">// 抽象方法</span>
+}
+
+<span style="color: #a0aec0;">// 实现接口</span>
+<span style="color: #63b3ed;">public class</span> Circle <span style="color: #63b3ed;">implements</span> Drawable {
+    <span style="color: #a0aec0;">@Override</span>
+    <span style="color: #63b3ed;">public void</span> draw() {
+        System.out.println(<span style="color: #68d391;">"画一个圆"</span>);
+    }
+}
+        </div>
+
+        <h3>4.2 抽象类（Abstract Class）</h3>
+        <div class="code-block">
+<span style="color: #63b3ed;">public abstract class</span> Shape {
+    <span style="color: #63b3ed;">protected</span> String color;
+
+    <span style="color: #a0aec0;">// 抽象方法（子类必须实现）</span>
+    <span style="color: #63b3ed;">public abstract double</span> getArea();
+
+    <span style="color: #a0aec0;">// 普通方法</span>
+    <span style="color: #63b3ed;">public void</span> display() {
+        System.out.println(<span style="color: #68d391;">"面积："</span> + getArea());
+    }
+}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第五部分：异常处理</h2>
+
+        <h3>5.1 异常层次结构</h3>
+        <div class="concept-box">
+            <pre>
+Throwable
+├── Error（严重错误，不应捕获）
+│   ├── OutOfMemoryError
+│   └── StackOverflowError
+└── Exception（可捕获异常）
+    ├── 受检异常（必须处理）
+    │   ├── IOException
+    │   └── SQLException
+    └── RuntimeException（非受检异常）
+        ├── NullPointerException
+        ├── ArrayIndexOutOfBoundsException
+        └── ClassCastException
+            </pre>
+        </div>
+
+        <h3>5.2 try-catch-finally</h3>
+        <div class="code-block">
+<span style="color: #63b3ed;">try</span> {
+    <span style="color: #a0aec0;">// 可能抛出异常的代码</span>
+    <span style="color: #63b3ed;">int</span> result = <span style="color: #f6ad55;">10</span> / <span style="color: #f6ad55;">0</span>;
+} <span style="color: #63b3ed;">catch</span> (ArithmeticException e) {
+    <span style="color: #a0aec0;">// 捕获并处理异常</span>
+    System.out.println(<span style="color: #68d391;">"除零错误："</span> + e.getMessage());
+} <span style="color: #63b3ed;">catch</span> (Exception e) {
+    <span style="color: #a0aec0;">// 捕获其他异常</span>
+    System.out.println(<span style="color: #68d391;">"发生错误："</span> + e.getMessage());
+} <span style="color: #63b3ed;">finally</span> {
+    <span style="color: #a0aec0;">// 无论是否异常都会执行</span>
+    System.out.println(<span style="color: #68d391;">"清理资源"</span>);
+}
+        </div>
+
+        <h3>5.3 throws 和 throw</h3>
+        <div class="code-block">
+<span style="color: #a0aec0;">// throws：声明方法可能抛出的异常</span>
+<span style="color: #63b3ed;">public void</span> readFile(String path) <span style="color: #63b3ed;">throws</span> IOException {
+    <span style="color: #a0aec0;">// 可能抛出 IOException</span>
+}
+
+<span style="color: #a0aec0;">// throw：手动抛出异常</span>
+<span style="color: #63b3ed;">public void</span> setAge(<span style="color: #63b3ed;">int</span> age) {
+    <span style="color: #63b3ed;">if</span> (age < <span style="color: #f6ad55;">0</span>) {
+        <span style="color: #63b3ed;">throw new</span> IllegalArgumentException(<span style="color: #68d391;">"年龄不能为负数"</span>);
+    }
+    <span style="color: #63b3ed;">this</span>.age = age;
+}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>第六部分：数组和字符串</h2>
+
+        <h3>6.1 数组</h3>
+        <div class="code-block">
+<span style="color: #a0aec0;">// 声明和初始化</span>
+<span style="color: #63b3ed;">int</span>[] numbers = <span style="color: #63b3ed;">new int</span>[<span style="color: #f6ad55;">5</span>];  <span style="color: #a0aec0;">// 指定大小</span>
+<span style="color: #63b3ed;">int</span>[] scores = {<span style="color: #f6ad55;">90</span>, <span style="color: #f6ad55;">85</span>, <span style="color: #f6ad55;">95</span>, <span style="color: #f6ad55;">88</span>, <span style="color: #f6ad55;">92</span>};  <span style="color: #a0aec0;">// 直接初始化</span>
+
+<span style="color: #a0aec0;">// 访问元素</span>
+<span style="color: #63b3ed;">int</span> first = scores[<span style="color: #f6ad55;">0</span>];  <span style="color: #a0aec0;">// 90</span>
+scores[<span style="color: #f6ad55;">2</span>] = <span style="color: #f6ad55;">100</span>;        <span style="color: #a0aec0;">// 修改元素</span>
+
+<span style="color: #a0aec0;">// 数组长度</span>
+<span style="color: #63b3ed;">int</span> length = scores.length;  <span style="color: #a0aec0;">// 5</span>
+
+<span style="color: #a0aec0;">// 遍历数组</span>
+<span style="color: #63b3ed;">for</span> (<span style="color: #63b3ed;">int</span> score : scores) {
+    System.out.println(score);
+}
+        </div>
+
+        <h3>6.2 字符串操作</h3>
+        <div class="code-block">
+String str = <span style="color: #68d391;">"Hello, Java!"</span>;
+
+<span style="color: #a0aec0;">// 常用方法</span>
+<span style="color: #63b3ed;">int</span> len = str.length();              <span style="color: #a0aec0;">// 12</span>
+<span style="color: #63b3ed;">char</span> ch = str.charAt(<span style="color: #f6ad55;">0</span>);            <span style="color: #a0aec0;">// 'H'</span>
+String sub = str.substring(<span style="color: #f6ad55;">7</span>);       <span style="color: #a0aec0;">// "Java!"</span>
+<span style="color: #63b3ed;">boolean</span> contains = str.contains(<span style="color: #68d391;">"Java"</span>);  <span style="color: #a0aec0;">// true</span>
+String upper = str.toUpperCase();     <span style="color: #a0aec0;">// "HELLO, JAVA!"</span>
+String replaced = str.replace(<span style="color: #68d391;">"Java"</span>, <span style="color: #68d391;">"World"</span>);
+
+<span style="color: #a0aec0;">// 字符串拼接</span>
+String name = <span style="color: #68d391;">"张三"</span>;
+String greeting = <span style="color: #68d391;">"你好，"</span> + name + <span style="color: #68d391;">"！"</span>;
+
+<span style="color: #a0aec0;">// StringBuilder（高效拼接）</span>
+StringBuilder sb = <span style="color: #63b3ed;">new</span> StringBuilder();
+sb.append(<span style="color: #68d391;">"Hello"</span>);
+sb.append(<span style="color: #68d391;">", "</span>);
+sb.append(<span style="color: #68d391;">"World"</span>);
+String result = sb.toString();
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>练习与测验</h2>
+
+        <div class="exercise">
+            <h4>练习 1：类型转换</h4>
+            <p>以下代码哪些能编译通过？为什么？</p>
+            <div class="code-block">
+<span style="color: #a0aec0;">// A</span>
+<span style="color: #63b3ed;">int</span> a = <span style="color: #f6ad55;">10</span>;
+<span style="color: #63b3ed;">double</span> b = a;
+
+<span style="color: #a0aec0;">// B</span>
+<span style="color: #63b3ed;">double</span> x = <span style="color: #f6ad55;">3.14</span>;
+<span style="color: #63b3ed;">int</span> y = x;
+
+<span style="color: #a0aec0;">// C</span>
+<span style="color: #63b3ed;">int</span> m = <span style="color: #f6ad55;">100</span>;
+<span style="color: #63b3ed;">byte</span> n = m;
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h4>练习 2：编写类</h4>
+            <p>创建一个 <code>Student</code> 类，包含：</p>
+            <ul>
+                <li>私有属性：name（String）、age（int）、grade（int）</li>
+                <li>构造方法</li>
+                <li>Getter 和 Setter 方法</li>
+                <li>方法：isAdult() - 返回是否成年（age >= 18）</li>
+            </ul>
+        </div>
+
+        <div class="quiz">
+            <h4>知识检查</h4>
+
+            <p><strong>问题 1：</strong>Java 中哪个关键字用于定义常量？</p>
+            <div class="quiz-option">A. var</div>
+            <div class="quiz-option">B. const</div>
+            <div class="quiz-option">C. final</div>
+            <div class="quiz-option">D. static</div>
+
+            <p><strong>问题 2：</strong>以下哪个是正确的接口定义？</p>
+            <div class="quiz-option">A. class MyInterface { void method(); }</div>
+            <div class="quiz-option">B. interface MyInterface { void method(); }</div>
+            <div class="quiz-option">C. abstract MyInterface { void method(); }</div>
+            <div class="quiz-option">D. struct MyInterface { void method(); }</div>
+
+            <p><strong>问题 3：</strong>try-catch 中，finally 块何时执行？</p>
+            <div class="quiz-option">A. 只在发生异常时执行</div>
+            <div class="quiz-option">B. 只在没有异常时执行</div>
+            <div class="quiz-option">C. 无论是否发生异常都会执行</div>
+            <div class="quiz-option">D. 从不执行</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>下一步</h2>
+        <div class="next-steps">
+            <h3>恭喜完成第二课！</h3>
+            <p>你已经掌握了 Java 语言基础。接下来：</p>
+            <ul>
+                <li><strong>动手练习</strong>：创建一个简单的命令行应用</li>
+                <li><strong>下一课程</strong>：Spring Boot 项目搭建与 RESTful API 开发</li>
+                <li><strong>深入学习</strong>：Java 集合框架、泛型、Lambda 表达式</li>
+            </ul>
+            <p><strong>推荐资源：</strong></p>
+            <ul>
+                <li><a href="https://docs.oracle.com/javase/tutorial/java/concepts/" style="color: #ffd700;">Oracle Java 教程 - 面向对象概念</a></li>
+                <li><a href="https://www.baeldung.com/java-tutorial" style="color: #ffd700;">Baeldung Java 教程</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>全栈工程师转型计划 - 第二课 | 基于你的学习进度定制</p>
+        <p>有任何疑问？随时向你的 AI 导师提问！</p>
+    </div>
+
+    <script>
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const question = this.parentElement;
+                const options = question.querySelectorAll('.quiz-option');
+                options.forEach(opt => { opt.style.background = 'white'; opt.style.color = '#333'; });
+                this.style.background = '#f5576c';
+                this.style.color = 'white';
+
+                const questionText = question.querySelector('p').textContent;
+                let correctAnswer = '';
+                if (questionText.includes('常量')) correctAnswer = 'C';
+                else if (questionText.includes('接口')) correctAnswer = 'B';
+                else if (questionText.includes('finally')) correctAnswer = 'C';
+
+                const selectedAnswer = this.textContent.charAt(0);
+                if (selectedAnswer === correctAnswer) {
+                    this.style.background = '#4caf50';
+                    setTimeout(() => alert('✓ 正确！'), 300);
+                } else {
+                    this.style.background = '#f44336';
+                    setTimeout(() => alert('✗ 错误。正确答案是 ' + correctAnswer), 300);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
